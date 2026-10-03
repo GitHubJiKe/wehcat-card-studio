@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>贴图工坊 · 公众号 6 图生成器</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css?v=20261003b">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">🎨 贴图工坊<small>公众号 6 图 · 纯本地生成 · 数据不出浏览器</small></div>
+  <div class="toolbar">
+    <div class="tb-group" id="templateTabs"></div>
+    <div class="tb-group" id="accentGroup"><span class="tb-label" id="accentLabel">强调色</span><div class="swatches" id="accentSwatches"></div></div>
+    <div class="tb-group"><span class="tb-label">头像</span>
+      <label class="avatar-btn" title="上传公众号头像（圆形，显示在每张页脚名称上方）">
+        <span class="avatar-thumb" id="avatarThumb"></span><span id="avatarBtnText">上传</span>
+        <input type="file" id="avatarFile" accept="image/*" hidden>
+      </label>
+      <button class="mini" id="avatarClear" type="button" hidden>清除</button>
+    </div>
+    <div class="tb-group"><span class="tb-label">页脚</span><input id="footerInput" type="text" spellcheck="false" placeholder="@我的公众号"></div>
+    <div class="tb-group"><span class="tb-label">张数</span>
+      <div class="stepper">
+        <button id="countMinus" type="button" title="减少一张">−</button>
+        <span id="countVal">6</span>
+        <button id="countPlus" type="button" title="增加一张">＋</button>
+      </div>
+    </div>
+    <div class="tb-group"><span class="tb-label">字号</span>
+      <div class="size-stepper" title="标题字号（72 ~ 160px）">
+        <span class="ss-tag">题</span>
+        <button id="titleMinus" type="button">−</button>
+        <span class="ss-val" id="titleSizeVal">112</span>
+        <button id="titlePlus" type="button">＋</button>
+      </div>
+      <div class="size-stepper" title="正文字号（32 ~ 72px）">
+        <span class="ss-tag">文</span>
+        <button id="bodyMinus" type="button">−</button>
+        <span class="ss-val" id="bodySizeVal">48</span>
+        <button id="bodyPlus" type="button">＋</button>
+      </div>
+    </div>
+    <div class="tb-group"><span class="tb-label">格式</span>
+      <div class="seg" id="formatSeg">
+        <button type="button" data-fmt="png">PNG</button>
+        <button type="button" data-fmt="jpg">JPG</button>
+      </div>
+    </div>
+    <div class="tb-actions">
+      <button class="btn" id="aiOpenBtn" type="button">🤖 AI 生成</button>
+      <button class="btn" id="pubOpenBtn" type="button">📝 发布文案</button>
+      <button class="btn" id="seedBtn" type="button">示例文案</button>
+      <button class="btn" id="clearBtn" type="button">清空</button>
+      <button class="btn primary" id="exportAllBtn" type="button">⬇ 一键导出 6 张</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="grid" id="cardGrid" aria-label="6 张贴图预览"></section>
+</main>
+
+<aside class="drawer" id="drawer" aria-label="卡片编辑">
+  <div class="drawer-head">
+    <div>
+      <div class="drawer-title" id="drawerTitle">第 1 张</div>
+      <div class="drawer-role" id="drawerRole"></div>
+    </div>
+    <button class="icon-btn" id="drawerClose" type="button" title="关闭 (Esc)">✕</button>
+  </div>
+  <div class="drawer-body">
+
+    <label class="field"><span>小标签（留空用默认）</span>
+      <input type="text" id="fKicker" spellcheck="false" placeholder="如：开篇 / 要点 01">
+    </label>
+
+    <label class="field"><span>标题</span>
+      <textarea id="fTitle" rows="2" spellcheck="false"></textarea>
+    </label>
+
+    <label class="field"><span>正文（可换行）</span>
+      <textarea id="fBody" rows="6" spellcheck="false"></textarea>
+    </label>
+
+    <div class="field"><span>添加表情贴纸</span>
+      <div class="emoji-grid" id="emojiGrid"></div>
+      <label class="upload-btn">＋ 上传表情包图片<input type="file" id="stickerFiles" accept="image/*" multiple hidden></label>
+    </div>
+
+    <div class="field" id="stickerPanel" hidden><span>选中的贴纸</span>
+      <div class="sel">
+        <div class="sel-preview" id="selPreview"></div>
+        <div class="sel-ops">
+          <label class="size-row">大小<input type="range" id="stickerSize"></label>
+          <div class="sel-btns">
+            <button class="mini" id="stickerTop" type="button">置顶</button>
+            <button class="mini danger" id="stickerDelete" type="button">删除</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field"><span>自定义背景图</span>
+      <label class="upload-btn">＋ 上传背景图片<input type="file" id="bgFile" accept="image/*" hidden></label>
+      <div class="dim-row" id="dimRow" hidden>
+        压暗<input type="range" id="bgDim" min="0" max="0.8" step="0.05">
+        <button class="mini" id="bgClear" type="button">清除背景图</button>
+      </div>
+    </div>
+
+    <p class="tips">提示：在预览图上直接拖动贴纸可调整位置；单击贴纸选中后可在此调整大小或删除；点击预览空白处可切换编辑的卡片；按 Esc 关闭面板，Delete 删除选中贴纸。</p>
+  </div>
+</aside>
+
+<div class="modal-mask" id="aiModal" hidden>
+  <div class="modal" role="dialog" aria-label="AI 自动生成贴图文案">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">🤖 AI 自动生成贴图文案</div>
+        <div class="modal-sub">粘贴素材 → DeepSeek 总结拆分为 <span id="aiSubCount">6</span> 张 → 应用后只需微调样式和贴纸</div>
+      </div>
+      <button class="icon-btn" id="aiClose" type="button" title="关闭 (Esc)">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <label class="field"><span>① 粘贴原始素材（文章 / 笔记 / 大纲，建议 6000 字以内）</span>
+        <textarea id="aiSource" rows="7" spellcheck="false" placeholder="把你要做成贴图的原始内容整段粘贴到这里，AI 会自动总结并拆分成多张连贯的文案……"></textarea>
+      </label>
+
+      <label class="field"><span>② 补充要求（可选）</span>
+        <input type="text" id="aiHint" spellcheck="false" placeholder="如：口语化一点 / 面向新手宝妈 / 突出价格优势">
+      </label>
+
+      <div class="ai-config">
+        <label class="field"><span>DeepSeek API Key<span class="onlylocal">仅保存在本机浏览器</span></span>
+          <input type="password" id="aiKey" spellcheck="false" placeholder="sk-……">
+        </label>
+        <label class="field"><span>模型</span>
+          <select id="aiModel">
+            <option value="deepseek-flash">deepseek-flash（V4.1 · 便宜 · 默认）</option>
+            <option value="deepseek-v4-pro">deepseek-v4-pro（V4 Pro · 更强）</option>
+          </select>
+        </label>
+        <label class="field"><span>生成张数（1~6）</span>
+          <input type="number" id="aiCount" min="1" max="6" step="1" value="6" inputmode="numeric">
+        </label>
+      </div>
+      <label class="think-row"><input type="checkbox" id="aiThinking"> 深度思考模式（更慢更贵，文案质量更高）</label>
+
+      <div class="ai-actions">
+        <button class="btn primary" id="aiRunBtn" type="button">🤖 调用 DeepSeek 生成文案</button>
+        <a class="ai-spec-link" href="SPEC.md" target="_blank">查看文案规范（SPEC.md）→</a>
+      </div>
+      <div class="ai-status" id="aiStatus" hidden></div>
+
+      <label class="field"><span>③ 生成 / 导入的文案 JSON（可手动微调后再应用）</span>
+        <textarea id="aiJson" rows="10" spellcheck="false" placeholder='也可以不走 AI：把符合规范的 JSON 粘贴到这里，或点下方「从 JSON 文件导入」。'></textarea>
+      </label>
+
+      <div class="ai-actions">
+        <button class="btn" id="aiImportBtn" type="button">📄 从 JSON 文件导入</button>
+        <button class="btn" id="aiCopySpecBtn" type="button">📋 复制规范提示词</button>
+        <button class="btn" id="aiCopyJsonBtn" type="button">📤 复制当前文案 JSON</button>
+        <button class="btn primary" id="aiApplyBtn" type="button">✓ 应用到 6 张卡片</button>
+      </div>
+      <input type="file" id="aiJsonFile" accept=".json,application/json" hidden>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-mask" id="pubModal" hidden>
+  <div class="modal" role="dialog" aria-label="发布文案">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">📝 发布文案</div>
+        <div class="modal-sub">发贴图时配套的标题、正文与话题标签（上限即公众号平台约束，不必写满）</div>
+      </div>
+      <button class="icon-btn" id="pubClose" type="button" title="关闭 (Esc)">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="field"><span>标题 <em class="counter" id="titleCount">0/20</em></span>
+        <div class="row-with-btn">
+          <input type="text" id="postTitle" maxlength="20" spellcheck="false" placeholder="给这组贴图起个标题（≤ 20 字）">
+          <button class="btn" id="copyTitle" type="button">复制</button>
+        </div>
+      </div>
+
+      <div class="field"><span>正文 <em class="counter" id="summaryCount">0/1000</em></span>
+        <div class="row-with-btn top">
+          <textarea id="postSummary" rows="8" maxlength="1000" spellcheck="false" placeholder="发图文时给读者看的正文……（≤ 1000 字，AI 生成后可随意删改）"></textarea>
+          <button class="btn" id="copySummary" type="button">复制</button>
+        </div>
+      </div>
+
+      <div class="field"><span>话题标签（空格 / 逗号分隔，复制时自动加井号）</span>
+        <div class="row-with-btn">
+          <input type="text" id="postTags" spellcheck="false" placeholder="如：养生 健康科普 干货">
+          <button class="btn" id="copyTags" type="button">复制</button>
+        </div>
+        <div class="tags-preview" id="tagsPreview"></div>
+      </div>
+
+      <div class="ai-actions" style="margin-bottom:0">
+        <button class="btn primary" id="copyAllBtn" type="button">📋 一键复制全部（标题 + 正文 + 标签）</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="export-stage" id="exportStage"></div>
+<div class="toast" id="toast"></div>
+
+<script src="vendor/html2canvas.min.js"></script>
+<script src="js/templates.js?v=20261003b"></script>
+<script src="js/ai.js?v=20261003b"></script>
+<script src="js/app.js?v=20261003b"></script>
+</body>
+</html>
