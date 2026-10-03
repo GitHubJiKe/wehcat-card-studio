@@ -5,6 +5,8 @@
 表情包图片、自定义背景、公众号头像，**接入 DeepSeek 一键把长文拆成 6 图文案**，
 一键导出 PNG / JPG。无需服务器、无需联网（调 AI 除外）、数据不出浏览器。
 
+![贴图工坊 · 全页预览](docs/preview.png)
+
 ## 快速开始
 
 1. **直接双击 `index.html`**，用 Chrome / Edge / Safari 打开即可。
