@@ -11,7 +11,8 @@
   const LS_KEY = 'wx-card-studio-v1';
   const CARD_W = 1080;
   const CARD_H = 1440;
-  const TOTAL = 6;
+  const TOTAL = 20;
+  const CANON_COUNT = 6; // 6 张时的完整角色表
   const AI_MODELS = ['deepseek-flash', 'deepseek-v4-pro'];
   const AI_DEFAULT_MODEL = 'deepseek-flash';
   const TITLE_SIZE_RANGE = [72, 160];
@@ -52,7 +53,7 @@
 
   // ---------- 数据 ----------
   function blankCards() {
-    return ROLES.map(() => ({ kicker: '', title: '', body: '', stickers: [], bgImage: null, bgDim: 0.25 }));
+    return Array.from({ length: TOTAL }, () => ({ kicker: '', title: '', body: '', stickers: [], bgImage: null, bgDim: 0.25 }));
   }
 
   function seedCards() {
@@ -64,7 +65,11 @@
       { title: '第 5 张，放最狠的干货', body: '注意力在这里到达顶点。\n把压箱底的清单、数字、反常识结论放在这张，截图率最高。', stickers: [] },
       { title: '现在，轮到你了', body: '打开编辑器，套上今天的模板，做你的第一组 6 图。\n如果这篇对你有用：\n点赞 👍  在看 👀  转发 🔁', stickers: [{ id: uid(), type: 'emoji', char: '🎉', x: 50, y: 84, size: 130 }] },
     ];
-    return seeds.map((s, i) => Object.assign(blankCards()[i], s, { kicker: '' }));
+    const cards = blankCards();
+    seeds.forEach((seed, i) => {
+      Object.assign(cards[i], seed, { kicker: '' });
+    });
+    return cards;
   }
 
   function defaultState() {
@@ -151,7 +156,7 @@
   // 当前张数下第 i 张的叙事角色：首张封面、末张收尾、中间为展开要点；6 张时用完整角色表
   function roleAt(i) {
     const n = state.count;
-    if (n === TOTAL) return ROLES[i];
+    if (n === CANON_COUNT) return ROLES[i];
     if (n === 1) return { label: '单张 · 钩子', kicker: '看点', hint: '一张图讲清一件事，勾住注意力' };
     if (i === 0) return ROLES[0];
     if (i === n - 1) return ROLES[ROLES.length - 1];
@@ -644,7 +649,7 @@
     const r = new FileReader();
     r.onload = () => {
       aiJson.value = String(r.result || '');
-      setAIStatus('info', '已读入「' + f.name + '」，检查无误后点「应用到 6 张卡片」');
+      setAIStatus('info', '已读入「' + f.name + '」，检查无误后点「应用到 ' + state.count + ' 张卡片」');
     };
     r.onerror = () => setAIStatus('err', '文件读取失败');
     r.readAsText(f, 'utf-8');
@@ -820,7 +825,7 @@
     if (!f) return;
     readFileAsDataURL(f, (src) => {
       applyAvatar(src);
-      toast('头像已应用到全部 6 张卡片');
+      toast('头像已应用到全部 ' + state.count + ' 张卡片');
     });
     avatarFile.value = '';
   });

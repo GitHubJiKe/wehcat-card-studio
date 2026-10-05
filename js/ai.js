@@ -1,6 +1,6 @@
 /* ==========================================================
    AI 生成模块（纯函数，不碰 DOM）
-   - SPEC_TEXT：6 图贴图文案规范（同时用作 DeepSeek 的 system
+   - SPEC_TEXT：贴图文案规范（同时用作 DeepSeek 的 system
      prompt 和「复制给 AI 的规范提示词」，与 SPEC.md 保持一致）
    - callDeepseek：调用 DeepSeek /chat/completions
    - extractJSON / normalize：从 AI 返回或用户粘贴的文本中
@@ -12,7 +12,7 @@
   const SPEC_TEXT = [
     '【公众号贴图文案规范 v1.1】',
     '任务：把一段素材内容，改编成「一组贴图文案 + 发布配套文案」，输出一个 JSON 对象。',
-    '张数：用户会指定 N（1~6，默认 6），cards 必须恰好 N 个对象。',
+    '张数：用户会指定 N（1~20，默认 6），cards 必须恰好 N 个对象。',
     '',
     '输出结构（严格 JSON，不要输出任何解释文字或代码块标记）：',
     '{',
@@ -45,7 +45,7 @@
   ].join('\n');
 
   function clampCount(count) {
-    return Math.min(6, Math.max(1, Number(count) || 6));
+    return Math.min(20, Math.max(1, Number(count) || 6));
   }
 
   function buildMessages(sourceText, hint, count) {
@@ -163,7 +163,7 @@
       if (Array.isArray(obj.tags)) out.tags = cleanTags(obj.tags.join(' '));
       else if (typeof obj.tags === 'string') out.tags = cleanTags(obj.tags);
     }
-    for (const c of cards.slice(0, 6)) {
+    for (const c of cards.slice(0, 20)) {
       out.cards.push({
         kicker: c && typeof c.kicker === 'string' ? c.kicker : '',
         title: c && typeof c.title === 'string' ? c.title : '',

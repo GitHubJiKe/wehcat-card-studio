@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>贴图工坊 · 公众号 6 图生成器</title>
+<title>贴图工坊 · 公众号贴图生成器</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="css/style.css?v=20261003b">
+<link rel="stylesheet" href="css/style.css?v=20261003c">
 </head>
 <body>
 
 <header class="topbar">
-  <div class="brand">🎨 贴图工坊<small>公众号 6 图 · 纯本地生成 · 数据不出浏览器</small></div>
+  <div class="brand">🎨 贴图工坊<small>公众号贴图 · 纯本地生成 · 数据不出浏览器</small></div>
   <div class="toolbar">
     <div class="tb-group" id="templateTabs"></div>
     <div class="tb-group" id="accentGroup"><span class="tb-label" id="accentLabel">强调色</span><div class="swatches" id="accentSwatches"></div></div>
@@ -60,7 +60,7 @@
 </header>
 
 <main>
-  <section class="grid" id="cardGrid" aria-label="6 张贴图预览"></section>
+  <section class="grid" id="cardGrid" aria-label="贴图预览"></section>
 </main>
 
 <aside class="drawer" id="drawer" aria-label="卡片编辑">
@@ -144,8 +144,8 @@
             <option value="deepseek-v4-pro">deepseek-v4-pro（V4 Pro · 更强）</option>
           </select>
         </label>
-        <label class="field"><span>生成张数（1~6）</span>
-          <input type="number" id="aiCount" min="1" max="6" step="1" value="6" inputmode="numeric">
+        <label class="field"><span>生成张数（1~20）</span>
+          <input type="number" id="aiCount" min="1" max="20" step="1" value="6" inputmode="numeric">
         </label>
       </div>
       <label class="think-row"><input type="checkbox" id="aiThinking"> 深度思考模式（更慢更贵，文案质量更高）</label>
@@ -217,8 +217,8 @@
 <div class="toast" id="toast"></div>
 
 <script src="vendor/html2canvas.min.js"></script>
-<script src="js/templates.js?v=20261003b"></script>
-<script src="js/ai.js?v=20261003b"></script>
-<script src="js/app.js?v=20261003b"></script>
+<script src="js/templates.js?v=20261003c"></script>
+<script src="js/ai.js?v=20261003c"></script>
+<script src="js/app.js?v=20261003c"></script>
 </body>
 </html>
