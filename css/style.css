@@ -54,6 +54,8 @@ input[type=range]{accent-color:#18181b}
 .avatar-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px 4px 4px;font-size:13px;font-weight:600;color:#3f3f46;cursor:pointer}
 .avatar-btn:hover{border-color:#a1a1aa}
 .avatar-thumb{width:26px;height:26px;border-radius:50%;background:#f4f4f5 center/cover no-repeat;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.dim-mini{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--muted)}
+.dim-mini input[type=range]{width:80px}
 
 /* ---------- 网格与预览 ---------- */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:22px;padding:24px;max-width:1560px;margin:0 auto;transition:padding-right .25s ease}

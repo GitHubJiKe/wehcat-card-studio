@@ -80,6 +80,8 @@
       footer: '@我的公众号 · 未经授权请勿转载',
       format: 'png',
       count: 6,
+      bgImage: null,
+      bgDim: 0.25,
       titleSize: TITLE_SIZE_DEFAULT,
       bodySize: BODY_SIZE_DEFAULT,
       post: { title: '', summary: '', tags: [] },
@@ -111,6 +113,7 @@
       try {
       const slim = JSON.parse(JSON.stringify(state));
       slim.avatar = null;
+      slim.bgImage = null;
       slim.cards.forEach((c) => {
           if (c.bgImage) c.bgImage = null;
           c.stickers = c.stickers.filter((s) => s.type === 'emoji');
@@ -128,6 +131,8 @@
   state.titleSize = clamp(state.titleSize, TITLE_SIZE_RANGE[0], TITLE_SIZE_RANGE[1]);
   if (!Number.isInteger(state.bodySize)) state.bodySize = BODY_SIZE_DEFAULT;
   state.bodySize = clamp(state.bodySize, BODY_SIZE_RANGE[0], BODY_SIZE_RANGE[1]);
+  if (typeof state.bgImage !== 'string' && state.bgImage !== null) state.bgImage = null;
+  if (typeof state.bgDim !== 'number' || Number.isNaN(state.bgDim)) state.bgDim = 0.25;
   if (!state.post || typeof state.post !== 'object') state.post = { title: '', summary: '', tags: [] };
   if (!Array.isArray(state.post.tags)) state.post.tags = [];
   let drawerIndex = 0;      // 抽屉正在编辑第几张
@@ -178,6 +183,23 @@
     scheduleSave();
   }
 
+  // ---------- 全局背景图（顶栏上传，所有卡片生效；单卡可单独覆盖） ----------
+  function renderBgUI() {
+    const has = !!state.bgImage;
+    gbThumb.style.backgroundImage = has ? "url('" + state.bgImage + "')" : '';
+    gbBtnText.textContent = has ? '更换' : '上传';
+    gbClear.hidden = !has;
+    gbDimRow.hidden = !has;
+    gbDimRange.value = state.bgDim;
+  }
+
+  function applyGlobalBg(src) {
+    state.bgImage = src || null;
+    renderBgUI();
+    renderGrid();
+    scheduleSave();
+  }
+
   // ---------- DOM 引用 ----------
   const grid = $('cardGrid');
   const drawer = $('drawer');
@@ -202,6 +224,11 @@
   const avatarBtnText = $('avatarBtnText');
   const avatarClear = $('avatarClear');
   const avatarFile = $('avatarFile');
+  const gbThumb = $('gbThumb');
+  const gbBtnText = $('gbBtnText');
+  const gbClear = $('gbClear');
+  const gbFile = $('gbFile');
+  const gbDimRange = $('gbDimRange');
   const formatSeg = $('formatSeg');
   const exportAllBtn = $('exportAllBtn');
   const countVal = $('countVal');
@@ -253,9 +280,11 @@
     const indexStr = String(i + 1).padStart(2, '0');
     const countStr = String(state.count).padStart(2, '0');
     let html = '';
-    if (card.bgImage) {
-      html += `<div class="bg-layer" style="background-image:url('${card.bgImage}')"></div>`;
-      html += `<div class="bg-dim" style="background:rgba(0,0,0,${card.bgDim || 0})"></div>`;
+    const bg = card.bgImage || state.bgImage;
+    const dim = card.bgImage ? (card.bgDim || 0) : (state.bgImage ? (state.bgDim || 0) : 0);
+    if (bg) {
+      html += `<div class="bg-layer" style="background-image:url('${bg}')"></div>`;
+      html += `<div class="bg-dim" style="background:rgba(0,0,0,${dim})"></div>`;
     }
     html += `<div class="card-content">${t.content(card, { num: i + 1, indexStr, role: roleAt(i), accent: currentAccent() })}</div>`;
     html += `<div class="sticker-layer">${card.stickers.map(stickerHTML).join('')}</div>`;
@@ -832,6 +861,31 @@
 
   avatarClear.addEventListener('click', () => applyAvatar(null));
 
+  gbFile.addEventListener('change', () => {
+    const f = gbFile.files[0];
+    if (!f) return;
+    readFileAsDataURL(f, (src) => {
+      state.bgImage = src;
+      if (typeof state.bgDim !== 'number') state.bgDim = 0.25;
+      renderBgUI();
+      renderGrid();
+      scheduleSave();
+      toast('全局背景图已应用到所有卡片，可用“压暗”让文字更清楚');
+    });
+    gbFile.value = '';
+  });
+
+  gbClear.addEventListener('click', () => {
+    applyGlobalBg(null);
+    toast('已清除全局背景图（单卡背景不受影响）');
+  });
+
+  gbDimRange.addEventListener('input', () => {
+    state.bgDim = +gbDimRange.value;
+    renderGrid();
+    scheduleSave();
+  });
+
   $('seedBtn').addEventListener('click', () => {
     if (!confirm('用示例文案覆盖当前内容吗？（贴纸与背景图会一起重置）')) return;
     state.cards = seedCards();
@@ -1010,6 +1064,7 @@
   emojiGrid.innerHTML = EMOJIS.map((e) => `<button type="button" data-emoji="${e}">${e}</button>`).join('');
   renderToolbar();
   renderAvatarUI();
+  renderBgUI();
   countVal.textContent = state.count;
   aiApplyBtn.textContent = '✓ 应用到 ' + state.count + ' 张卡片';
   aiRunBtn.textContent = '🤖 调用 DeepSeek 生成 ' + state.count + ' 张文案';
