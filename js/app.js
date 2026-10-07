@@ -184,11 +184,16 @@
   }
 
   // ---------- 全局背景图（顶栏上传，所有卡片生效；单卡可单独覆盖） ----------
+  function anyCardBg() {
+    return state.cards.some((c) => c.bgImage);
+  }
+
   function renderBgUI() {
     const has = !!state.bgImage;
+    const any = has || anyCardBg();
     gbThumb.style.backgroundImage = has ? "url('" + state.bgImage + "')" : '';
     gbBtnText.textContent = has ? '更换' : '上传';
-    gbClear.hidden = !has;
+    gbClear.hidden = !any;
     gbDimRow.hidden = !has;
     gbDimRange.value = state.bgDim;
   }
@@ -876,8 +881,12 @@
   });
 
   gbClear.addEventListener('click', () => {
+    const hadCardBgs = anyCardBg();
     applyGlobalBg(null);
-    toast('已清除全局背景图（单卡背景不受影响）');
+    state.cards.forEach((c) => { c.bgImage = null; });
+    renderGrid();
+    scheduleSave();
+    toast(hadCardBgs ? '已移除全部背景图（含各卡片单独设置的背景）' : '已清除全局背景图');
   });
 
   gbDimRange.addEventListener('input', () => {
