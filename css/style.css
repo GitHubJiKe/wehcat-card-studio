@@ -75,6 +75,7 @@ body.drawer-open .topbar{padding-right:454px}
 .mini{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;color:#3f3f46;cursor:pointer}
 .mini:hover{border-color:#a1a1aa}
 .mini.danger{color:#dc2626;border-color:#fecaca}
+.mini.active{border-color:#18181b;box-shadow:inset 0 0 0 1px #18181b;color:#18181b}
 .card-shell{position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:10px;border:1px solid var(--line);background:#f4f4f5;cursor:pointer}
 .card-scale{position:absolute;top:0;left:0;width:1080px;height:1440px;transform-origin:top left}
 
@@ -99,9 +100,9 @@ body.drawer-open .topbar{padding-right:454px}
 .t-minimal{color:#18181b}
 .t-minimal .mn-bigindex{position:absolute;top:12px;right:28px;z-index:0;font-family:var(--font-serif);font-weight:700;font-size:280px;line-height:1;color:var(--accent-ghost,rgba(0,0,0,.08))}
 .t-minimal .mn-kicker{position:relative;margin:124px 90px 0;font-size:32px;font-weight:700;letter-spacing:.5em;color:var(--accent)}
-.t-minimal .mn-title{position:relative;margin:44px 90px 0;font-family:var(--font-title);font-size:var(--title-size,112px);font-weight:400;line-height:1.24;letter-spacing:.02em}
+.t-minimal .mn-title{position:relative;margin:44px 90px 0;font-family:var(--font-title);font-size:var(--title-size,112px);font-weight:400;line-height:1.24;letter-spacing:.02em;color:var(--title-color,#18181b)}
 .t-minimal .mn-rule{position:relative;margin:50px 90px 0;width:110px;height:10px;background:var(--accent)}
-.t-minimal .mn-body{position:relative;margin:54px 90px 0;font-family:var(--font-body);font-size:var(--body-size,48px);line-height:1.8;color:#3f3f46;white-space:pre-wrap}
+.t-minimal .mn-body{position:relative;margin:54px 90px 0;font-family:var(--font-body);font-size:var(--body-size,48px);line-height:1.8;color:var(--body-color,#3f3f46);white-space:pre-wrap}
 .t-minimal .card-index{color:#71717a}
 .t-minimal .card-footer{color:#a1a1aa}
 
@@ -110,9 +111,9 @@ body.drawer-open .topbar{padding-right:454px}
 .t-forest::before{content:"";position:absolute;top:36px;left:36px;right:36px;bottom:36px;z-index:0;border:1.5px solid rgba(242,239,228,.26)}
 .t-forest .ev-bigindex{position:absolute;top:44px;right:52px;z-index:0;font-family:var(--font-serif);font-weight:700;font-size:260px;line-height:1;color:rgba(242,239,228,.10)}
 .t-forest .ev-kicker{position:relative;margin:124px 90px 0;font-size:32px;font-weight:700;letter-spacing:.5em;color:var(--accent)}
-.t-forest .ev-title{position:relative;margin:44px 90px 0;font-family:var(--font-title);font-size:var(--title-size,112px);font-weight:400;line-height:1.26;color:#f4f1e6}
+.t-forest .ev-title{position:relative;margin:44px 90px 0;font-family:var(--font-title);font-size:var(--title-size,112px);font-weight:400;line-height:1.26;color:var(--title-color,#f4f1e6)}
 .t-forest .ev-rule{position:relative;margin:50px 90px 0;width:110px;height:8px;background:var(--accent)}
-.t-forest .ev-body{position:relative;margin:54px 90px 0;font-family:var(--font-body);font-size:var(--body-size,48px);line-height:1.8;color:rgba(242,239,228,.88);white-space:pre-wrap}
+.t-forest .ev-body{position:relative;margin:54px 90px 0;font-family:var(--font-body);font-size:var(--body-size,48px);line-height:1.8;color:var(--body-color,rgba(242,239,228,.88));white-space:pre-wrap}
 .t-forest .card-index{color:rgba(242,239,228,.75)}
 .t-forest .card-footer{color:rgba(242,239,228,.55)}
 
@@ -121,9 +122,9 @@ body.drawer-open .topbar{padding-right:454px}
 .t-burgundy::before{content:"";position:absolute;top:36px;left:36px;right:36px;bottom:36px;z-index:0;border:1.5px solid rgba(247,240,230,.24)}
 .t-burgundy .bu-bigindex{position:absolute;top:44px;right:52px;z-index:0;font-family:var(--font-serif);font-weight:700;font-size:260px;line-height:1;color:rgba(247,240,230,.10)}
 .t-burgundy .bu-kicker{position:relative;margin:124px 90px 0;font-size:32px;font-weight:700;letter-spacing:.5em;color:var(--accent)}
-.t-burgundy .bu-title{position:relative;margin:44px 90px 0;font-family:var(--font-title);font-size:var(--title-size,112px);font-weight:400;line-height:1.24;color:#f8f1e7}
+.t-burgundy .bu-title{position:relative;margin:44px 90px 0;font-family:var(--font-title);font-size:var(--title-size,112px);font-weight:400;line-height:1.24;color:var(--title-color,#f8f1e7)}
 .t-burgundy .bu-rule{position:relative;margin:50px 90px 0;width:110px;height:8px;background:var(--accent)}
-.t-burgundy .bu-body{position:relative;margin:54px 90px 0;font-family:var(--font-body);font-size:var(--body-size,48px);line-height:1.8;color:rgba(247,240,230,.88);white-space:pre-wrap}
+.t-burgundy .bu-body{position:relative;margin:54px 90px 0;font-family:var(--font-body);font-size:var(--body-size,48px);line-height:1.8;color:var(--body-color,rgba(247,240,230,.88));white-space:pre-wrap}
 .t-burgundy .card-index{color:rgba(247,240,230,.75)}
 .t-burgundy .card-footer{color:rgba(247,240,230,.55)}
 
@@ -132,9 +133,9 @@ body.drawer-open .topbar{padding-right:454px}
 .t-blue::before{content:"";position:absolute;top:36px;left:36px;right:36px;bottom:36px;z-index:0;border:1.5px solid rgba(238,241,247,.24)}
 .t-blue .bl-bigindex{position:absolute;top:44px;right:52px;z-index:0;font-family:var(--font-serif);font-weight:700;font-size:260px;line-height:1;color:rgba(238,241,247,.10)}
 .t-blue .bl-kicker{position:relative;margin:124px 90px 0;font-size:32px;font-weight:700;letter-spacing:.5em;color:var(--accent)}
-.t-blue .bl-title{position:relative;margin:44px 90px 0;font-family:var(--font-title);font-size:var(--title-size,112px);font-weight:400;line-height:1.26;color:#f0f3f9}
+.t-blue .bl-title{position:relative;margin:44px 90px 0;font-family:var(--font-title);font-size:var(--title-size,112px);font-weight:400;line-height:1.26;color:var(--title-color,#f0f3f9)}
 .t-blue .bl-rule{position:relative;margin:50px 90px 0;width:110px;height:8px;background:var(--accent)}
-.t-blue .bl-body{position:relative;margin:54px 90px 0;font-family:var(--font-body);font-size:var(--body-size,48px);line-height:1.8;color:rgba(238,241,247,.88);white-space:pre-wrap}
+.t-blue .bl-body{position:relative;margin:54px 90px 0;font-family:var(--font-body);font-size:var(--body-size,48px);line-height:1.8;color:var(--body-color,rgba(238,241,247,.88));white-space:pre-wrap}
 .t-blue .card-index{color:rgba(238,241,247,.75)}
 .t-blue .card-footer{color:rgba(238,241,247,.55)}
 

@@ -132,6 +132,7 @@
   if (!Number.isInteger(state.bodySize)) state.bodySize = BODY_SIZE_DEFAULT;
   state.bodySize = clamp(state.bodySize, BODY_SIZE_RANGE[0], BODY_SIZE_RANGE[1]);
   if (typeof state.bgImage !== 'string' && state.bgImage !== null) state.bgImage = null;
+  if (typeof state.fontColor !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(state.fontColor)) state.fontColor = null;
   if (typeof state.bgDim !== 'number' || Number.isNaN(state.bgDim)) state.bgDim = 0.25;
   if (!state.post || typeof state.post !== 'object') state.post = { title: '', summary: '', tags: [] };
   if (!Array.isArray(state.post.tags)) state.post.tags = [];
@@ -234,6 +235,8 @@
   const gbClear = $('gbClear');
   const gbFile = $('gbFile');
   const gbDimRange = $('gbDimRange');
+  const fontColorPick = $('fontColorPick');
+  const fontColorAuto = $('fontColorAuto');
   const formatSeg = $('formatSeg');
   const exportAllBtn = $('exportAllBtn');
   const countVal = $('countVal');
@@ -312,6 +315,13 @@
     el.style.setProperty('--accent-glow', hexToRgba(accent, 0.3));
     el.style.setProperty('--title-size', state.titleSize + 'px');
     el.style.setProperty('--body-size', state.bodySize + 'px');
+    if (state.fontColor) {
+      el.style.setProperty('--title-color', state.fontColor);
+      el.style.setProperty('--body-color', hexToRgba(state.fontColor, 0.85));
+    } else {
+      el.style.removeProperty('--title-color');
+      el.style.removeProperty('--body-color');
+    }
     el.innerHTML = cardInner(i, card);
     return el;
   }
@@ -895,6 +905,29 @@
     scheduleSave();
   });
 
+  // ---------- 字体颜色（自动 / 自定义） ----------
+  function renderFontUI() {
+    fontColorAuto.classList.toggle('active', !state.fontColor);
+    fontColorPick.value = state.fontColor || '#ffffff';
+  }
+
+  fontColorPick.addEventListener('input', () => {
+    const v = fontColorPick.value;
+    if (!/^#[0-9a-fA-F]{6}$/.test(v)) return;
+    state.fontColor = v;
+    fontColorAuto.classList.remove('active');
+    renderGrid();
+    scheduleSave();
+  });
+
+  fontColorAuto.addEventListener('click', () => {
+    state.fontColor = null;
+    renderFontUI();
+    renderGrid();
+    scheduleSave();
+    toast('字体颜色已恢复为模板默认');
+  });
+
   $('seedBtn').addEventListener('click', () => {
     if (!confirm('用示例文案覆盖当前内容吗？（贴纸与背景图会一起重置）')) return;
     state.cards = seedCards();
@@ -1074,6 +1107,7 @@
   renderToolbar();
   renderAvatarUI();
   renderBgUI();
+  renderFontUI();
   countVal.textContent = state.count;
   aiApplyBtn.textContent = '✓ 应用到 ' + state.count + ' 张卡片';
   aiRunBtn.textContent = '🤖 调用 DeepSeek 生成 ' + state.count + ' 张文案';
